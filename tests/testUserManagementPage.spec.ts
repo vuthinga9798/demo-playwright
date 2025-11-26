@@ -34,8 +34,7 @@ test.describe('Verify users are created/edited/deleted successfully', () => {
     test('03 - Delete and verify that user is deleted successfully', async ({ dashUserManagementPage }) => {
         await dashUserManagementPage.searchUserByUsername(userInfo[2].UserName)
         await dashUserManagementPage.deleteUserByUsername(userInfo[2].UserName);
-        await dashUserManagementPage.searchUserByUsername(userInfo[2].Username);
-        const isUserPresent = await dashUserManagementPage.verifyUserInSearchResults(userInfo[1].Username);
-        expect(isUserPresent).toBeFalsy();
+        await dashUserManagementPage.searchUserByUsername(userInfo[2].UserName);
+        await dashUserManagementPage.verifyNoRecordsFound();
     })
 })

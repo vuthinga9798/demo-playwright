@@ -11,10 +11,7 @@ export class DashUserManagementPage extends HelperBase {
     get searchButton() { return this.page.locator('button:has-text("Search")') }
     get searchUsernameInput() { return this.page.locator('.oxd-input-group', { has: this.page.locator('label:has-text("anna12345")'), }).locator('input') }
     get titleText() { return this.page.locator('h5.oxd-text oxd-text--h5 oxd-table-filter-title') }
-
-    async verifyPageTitle() {
-        // await expect(this.titleText).toHaveText('System Users');
-    }
+    get noRecordsFoundText() { return this.page.locator('[class*="orangehrm-horizontal-padding"]') }
 
     async openCreateAdminPage() {
         await this.createAdminButton.click();
@@ -22,7 +19,6 @@ export class DashUserManagementPage extends HelperBase {
     }
 
     async searchUserByUsername(username: string) {
-        this.verifyPageTitle()
         await this.inputTextByLabel('Username', username);
         await this.searchButton.click();
     }
@@ -47,5 +43,10 @@ export class DashUserManagementPage extends HelperBase {
         }).locator('i.bi-trash').click();
         const confirmDeleteButton = this.page.locator('button:has-text("Yes, Delete")');
         await confirmDeleteButton.click();
+    }
+
+    async verifyNoRecordsFound(){
+        const noRecordsText = await this.noRecordsFoundText.textContent();
+        return noRecordsText?.includes('No Records Found') ?? false;
     }
 }
