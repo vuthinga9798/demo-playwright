@@ -32,9 +32,13 @@ export class HelperBase {
     }
 
     async clickUntilNextElementVisible(page: Page, locatorToClick: Locator, locatorToBeVisible: Locator) {
-        while (!(await locatorToBeVisible.isVisible())) {
+        let attempts = 0;
+        while (!(await locatorToBeVisible.isVisible()) && attempts < 5) {
             await locatorToClick.click();
             await page.waitForTimeout(2000);
+            const count = await locatorToBeVisible.count();
+            console.log("count =====" + count);
+            attempts++;
         }
     }
 

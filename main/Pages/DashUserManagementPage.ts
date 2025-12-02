@@ -32,27 +32,35 @@ export class DashUserManagementPage extends HelperBase {
         await this.waitForLoaderToDisappear();
     }
 
-    async searchUserTillResultsVisible(username: string) {
+    async searchUserTillResultsVisible(userName: string) {
         await this.waitForLoaderToDisappear();
-        await this.inputTextByLabel('Username', username);
-        const userLocator = this.page.locator('.oxd-table-row', {
-            has: this.page.locator(`.oxd-table-cell:has-text("${username}")`),
-        });
+        await this.inputTextByLabel('Username', userName);
+        const userLocator = await this.page.locator('.oxd-table-card').locator(`:text-is("${userName}")`);
         await this.clickUntilNextElementVisible(this.page, this.searchButton, userLocator);
         await this.waitForLoaderToDisappear();
     }
 
     async verifyUserInSearchResults(userName: string): Promise<boolean> {
         await this.userTableRows.isVisible();
-        const userLocator = this.page.locator('.oxd-table-row', {
-            has: this.page.locator(`.oxd-table-cell:has-text("${userName}")`),
+        const userLocator = this.page.locator('.oxd-table-card', {
+            has: this.page.locator(`.div:has-text("${userName}")`),
         });
         return await userLocator.count() > 0;
     }
 
-    async openEditUserPageByUsername(username: string) {
+    async verifyUserNotInSearchResults(userName: string) {
+        await this.userTableRows.isVisible();
+        const noRecordsLocator = this.page.locator(
+            'span.oxd-text:has-text("No Records Found")'
+        );
+        await this.waitForLoaderToDisappear();
+        const isNoRecordsVisible = await noRecordsLocator.isVisible();
+        expect(isNoRecordsVisible).toBeTruthy();
+    }
+
+    async openEditUserPageByUsername(userName: string) {
         await this.page.locator('.oxd-table-card').filter({
-            has: this.page.locator(`div:has-text("${username}")`)
+            has: this.page.locator(`div:has-text("${userName}")`)
         }).locator('i.bi-pencil-fill').click();
         await this.waitForLoaderToDisappear();
     }

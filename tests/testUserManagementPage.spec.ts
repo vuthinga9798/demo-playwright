@@ -15,7 +15,7 @@ const userInfo = parse<Record<string, string>>(fs.readFileSync('test_data/UserIn
     skip_empty_lines: true
 });
 
-test.describe('Verify users are created/edited/deleted successfully', () => {
+test.describe.serial('Verify users are created/edited/deleted successfully', () => {
     test('01 - Create and verify that the user is created successfully', async ({ dashUserManagementPage, dashCreateUserPage }) => {
         await dashUserManagementPage.openCreateAdminPage()
         await dashCreateUserPage.createAdminUser(userInfo, 1)
@@ -28,15 +28,12 @@ test.describe('Verify users are created/edited/deleted successfully', () => {
         await dashUserManagementPage.openEditUserPageByUsername(userInfo[1].UserName)
         await dashCreateUserPage.editAdminUser(userInfo, 2);
         await dashUserManagementPage.searchUserTillResultsVisible(userInfo[2].UserName);
-        await dashUserManagementPage.verifyUserInSearchResults(userInfo[2].UserNamee);
+        await dashUserManagementPage.verifyUserInSearchResults(userInfo[2].UserName);
     })
 
     test('03 - Delete and verify that user is deleted successfully', async ({ dashUserManagementPage }) => {
         await dashUserManagementPage.searchUserTillResultsVisible(userInfo[2].UserName)
         await dashUserManagementPage.deleteUserByUsername(userInfo[2].UserName)
-
-        await dashUserManagementPage.searchUserByUsername(userInfo[2].Username);
-        const isUserPresent = await dashUserManagementPage.verifyUserInSearchResults(userInfo[1].Username);
-        expect(isUserPresent).toBeFalsy();
+        await dashUserManagementPage.verifyUserNotInSearchResults(userInfo[1].UserName);
     })
 })
