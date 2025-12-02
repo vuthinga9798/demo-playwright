@@ -14,22 +14,23 @@ export class DashCreateUserPage extends HelperBase {
     get saveButton() { return this.page.locator('button:has-text("Save")') }
     get container() { return this.page.locator('.orangehrm-card-container') }
 
-    async createAdminUser(userInfo: Record<string, string>[], index: number) {
-        await this.selectDropdownByLabel('User Role', userInfo[index].UserRole);
-        await this.selectDropdownByLabel('Status', userInfo[index].Status);
-        await this.inputTextByLabel('Employee Name', userInfo[index].EmployeeName);
-        await this.employeeNameList.locator(`text=${userInfo[index].EmployeeName}`).click();
-        await this.inputTextByLabel('Username', userInfo[index].UserName);
-        await this.inputTextByLabel('Password', userInfo[index].Password);
-        await this.inputTextByLabel('Confirm Password', userInfo[index].Password);
+    async createAdminUser(userInfo: Record<string, string>| undefined) {
+        if (!userInfo) return;
+        await this.selectDropdownByLabel('User Role', userInfo.UserRole);
+        await this.selectDropdownByLabel('Status', userInfo.Status);
+        await this.inputTextByLabel('Employee Name', userInfo.EmployeeName);
+        await this.employeeNameList.locator(`text=${userInfo.EmployeeName}`).click();
+        await this.inputTextByLabel('Username', userInfo.UserName);
+        await this.inputTextByLabel('Password', userInfo.Password);
+        await this.inputTextByLabel('Confirm Password', userInfo.Password);
         await this.saveButton.click();
         await this.waitForLoaderToDisappear();
         return new DashUserManagementPage(this.page);
     }
 
-    async editAdminUser(userInfo: Record<string, string>[], index: number) {
+    async editAdminUser(userInfo: Record<string, string>| undefined) {
         await this.container.isVisible();
-        await this.inputTextByLabel('Username', userInfo[index].UserName);
+        await this.inputTextByLabel('Username', userInfo!.UserName);
         await this.saveButton.click();
         await this.waitForLoaderToDisappear();
         await this.waitForElementToDisappear(this.saveButton)

@@ -66,9 +66,6 @@ export class DashUserManagementPage extends HelperBase {
     }
 
     async deleteUserByUsername(username: string) {
-        // await this.page.locator('.oxd-table-card').filter({
-        //     has: this.page.locator(`div:has-text("${username}")`)
-        // }).locator('i.bi-pencil-fill').click();
         const rowLocator = this.page.locator('.oxd-table-card').filter({
             has: this.page.locator(`div:has-text("${username}")`)
         });
