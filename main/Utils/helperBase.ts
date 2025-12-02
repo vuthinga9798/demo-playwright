@@ -36,8 +36,6 @@ export class HelperBase {
         while (!(await locatorToBeVisible.isVisible()) && attempts < 5) {
             await locatorToClick.click();
             await page.waitForTimeout(2000);
-            const count = await locatorToBeVisible.count();
-            console.log("count =====" + count);
             attempts++;
         }
     }
