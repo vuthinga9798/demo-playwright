@@ -1,0 +1,3 @@
+Sr.No,FirstName,LastName,Mobile,Gender,Email,DateOfBirth,Subjects,Address,picturePath
+0,Anna,Vu,1111111111,Female,,,,,
+1,Giang,Nguyen,2222222222,Female,Giang@example.com,01-01-1991,test subject,123 Main St,test_data/img/avatar.png
