@@ -1,6 +1,6 @@
-import { test } from "../fixtures/custom-fixtures";
 import { parse } from "csv-parse/sync";
 import fs from "fs";
+import { test } from "../fixtures/custom-fixtures";
 import { NavigationMenu } from "../main/Utils/enums";
 
 test.beforeEach(async ({ page, loginPage, dashHomePage }) => {
@@ -17,22 +17,21 @@ const user = parse<Record<string, string>>(
   }
 );
 
-const userInfo: Record<string, string>[] = [
-  {
-    UserName: "anna_12345",
-    Password: "superadmin123A@",
-    UserRole: "Admin",
-    EmployeeName: "Anna  Vu",
-    Status: "Enabled",
-  },
-  {
-    UserName: "edit_anna_12345",
-    Password: "superadmin123A@",
-    UserRole: "Admin",
-    EmployeeName: "Anna  Vu",
-    Status: "Enabled",
-  },
-];
+const userAddInfo: Record<string, string> = {
+  username: "anna_12345",
+  password: "superadmin123A@",
+  userRole: "Admin",
+  employeeName: "Anna  Vu",
+  status: "Enabled",
+};
+
+const userEditInfo: Record<string, string> = {
+  username: "edit_anna_12345",
+  password: "superadmin123A@",
+  userRole: "Admin",
+  employeeName: "Anna  Vu",
+  status: "Enabled",
+};
 
 test.describe
   .serial("Verify users are created/edited/deleted successfully", () => {
@@ -40,19 +39,18 @@ test.describe
     dashUserManagementPage,
     dashCreateUserPage,
   }) => {
-    const userRow: Record<string, string> | undefined = userInfo.find(
-      (user) => user.UserName === "anna_12345"
-    );
-
     await test.step("Create a new admin user", async () => {
       await dashUserManagementPage.openCreateAdminPage();
-      await dashCreateUserPage.createAdminUser(userRow);
+      await dashCreateUserPage.createAdminUser(userAddInfo);
+      userAddInfo.username;
     });
     await test.step("Verify that the new user is created successfully", async () => {
       await dashUserManagementPage.searchUserTillResultsVisible(
-        userRow!.UserName
+        userAddInfo.username
       );
-      await dashUserManagementPage.verifyUserInSearchResults(userRow!.UserName);
+      await dashUserManagementPage.verifyUserInSearchResults(
+        userAddInfo.username
+      );
     });
   });
 
@@ -60,28 +58,21 @@ test.describe
     dashUserManagementPage,
     dashCreateUserPage,
   }) => {
-    const userRow: Record<string, string> | undefined = userInfo.find(
-      (user) => user.UserName === "anna_12345"
-    );
-    const userEditRow: Record<string, string> | undefined = userInfo.find(
-      (user) => user.UserName === "edit_anna_12345"
-    );
-
     await test.step("Edit the existing user", async () => {
       await dashUserManagementPage.searchUserTillResultsVisible(
-        userRow!.UserName
+        userAddInfo.username
       );
       await dashUserManagementPage.openEditUserPageByUsername(
-        userRow!.UserName
+        userAddInfo.username
       );
-      await dashCreateUserPage.editAdminUser(userEditRow);
+      await dashCreateUserPage.editAdminUser(userEditInfo);
     });
     await test.step("Verify that the user is edited successfully", async () => {
       await dashUserManagementPage.searchUserTillResultsVisible(
-        userEditRow!.UserName
+        userEditInfo.username
       );
       await dashUserManagementPage.verifyUserInSearchResults(
-        userEditRow!.UserName
+        userEditInfo.username
       );
     });
   });
@@ -89,18 +80,15 @@ test.describe
   test("03 - Delete and verify that user is deleted successfully", async ({
     dashUserManagementPage,
   }) => {
-    const userEditRow: Record<string, string> | undefined = userInfo.find(
-      (user) => user.UserName === "edit_anna_12345"
-    );
     await test.step("Delete the existing user", async () => {
       await dashUserManagementPage.searchUserTillResultsVisible(
-        userEditRow!.UserName
+        userEditInfo.username
       );
-      await dashUserManagementPage.deleteUserByUsername(userEditRow!.UserName);
+      await dashUserManagementPage.deleteUserByUsername(userEditInfo.username);
     });
     await test.step("Verify that the user is deleted successfully", async () => {
       await dashUserManagementPage.verifyUserNotInSearchResults(
-        userEditRow!.UserName
+        userEditInfo.username
       );
     });
   });

@@ -48,12 +48,12 @@ export class DashUserManagementPage extends HelperBase {
     await this.waitForLoaderToDisappear();
   }
 
-  async searchUserTillResultsVisible(userName: string) {
+  async searchUserTillResultsVisible(username: string) {
     await this.waitForLoaderToDisappear();
-    await this.inputTextByLabel("Username", userName);
+    await this.inputTextByLabel("Username", username);
     const userLocator = await this.page
       .locator(".oxd-table-card")
-      .locator(`:text-is("${userName}")`);
+      .locator(`:text-is("${username}")`);
     await this.clickUntilNextElementVisible(
       this.page,
       this.searchButton,

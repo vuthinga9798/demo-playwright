@@ -26,25 +26,24 @@ export class DashCreateUserPage extends HelperBase {
     return this.page.locator(".orangehrm-card-container");
   }
 
-  async createAdminUser(userInfo: Record<string, string> | undefined) {
-    if (!userInfo) return;
-    await this.selectDropdownByLabel("User Role", userInfo.UserRole);
-    await this.selectDropdownByLabel("Status", userInfo.Status);
-    await this.inputTextByLabel("Employee Name", userInfo.EmployeeName);
+  async createAdminUser(userInfo: Record<string, string>) {
+    await this.selectDropdownByLabel("User Role", userInfo.userRole);
+    await this.selectDropdownByLabel("Status", userInfo.status);
+    await this.inputTextByLabel("Employee Name", userInfo.employeeName);
     await this.employeeNameList
-      .locator(`text=${userInfo.EmployeeName}`)
+      .locator(`text=${userInfo.employeeName}`)
       .click();
-    await this.inputTextByLabel("Username", userInfo.UserName);
-    await this.inputTextByLabel("Password", userInfo.Password);
-    await this.inputTextByLabel("Confirm Password", userInfo.Password);
+    await this.inputTextByLabel("Username", userInfo.username);
+    await this.inputTextByLabel("Password", userInfo.password);
+    await this.inputTextByLabel("Confirm Password", userInfo.password);
     await this.saveButton.click();
     await this.waitForLoaderToDisappear();
     return new DashUserManagementPage(this.page);
   }
 
-  async editAdminUser(userInfo: Record<string, string> | undefined) {
+  async editAdminUser(userInfo: Record<string, string>) {
     await this.container.isVisible();
-    await this.inputTextByLabel("Username", userInfo!.UserName);
+    await this.inputTextByLabel("Username", userInfo.username);
     await this.saveButton.click();
     await this.waitForLoaderToDisappear();
     await this.waitForElementToDisappear(this.saveButton);

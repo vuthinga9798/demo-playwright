@@ -7,30 +7,18 @@ export class HelperBase {
   }
 
   async inputTextByLabel(label: string, value: string) {
-    let attempts = 0;
     const inputLocator = this.page.locator(
       `.oxd-input-group:has(label:text-is("${label}")) input`
     );
     await inputLocator.click();
     await inputLocator.press("Control+A");
     await inputLocator.fill(value);
-
-    if (attempts === 5) {
-      throw new Error(`Failed to fill input with value "${value}"`);
-    }
   }
 
   async getValueByLabel(label: String) {
     return await this.page
       .locator(`//td[text()="${label}"]/following-sibling::td`)
       .textContent();
-  }
-
-  async scrollUntilVisible(page: Page, locator: Locator) {
-    while (!(await locator.isVisible())) {
-      await page.evaluate(() => window.scrollBy(0, 500));
-      await page.waitForTimeout(200);
-    }
   }
 
   async clickUntilNextElementVisible(
@@ -44,14 +32,6 @@ export class HelperBase {
       await page.waitForTimeout(2000);
       attempts++;
     }
-  }
-
-  async formatDate(dateString: string) {
-    const date = new Date(dateString);
-    const day = date.toLocaleString("en-GB", { day: "2-digit" });
-    const month = date.toLocaleString("en-GB", { month: "short" });
-    const year = date.getFullYear();
-    return `${day} ${month}, ${year}`;
   }
 
   async assertRedBorder(...fields: Locator[]) {
