@@ -38,7 +38,7 @@ export class DashCreateUserPage extends HelperBase {
     await this.inputTextByLabel("Confirm Password", userInfo.password);
     await this.saveButton.click();
     await this.waitForLoaderToDisappear();
-    return new DashUserManagementPage(this.page);
+    await this.waitForElementToDisappear(this.saveButton);
   }
 
   async editAdminUser(userInfo: Record<string, string>) {
